@@ -22,51 +22,36 @@ import java.net.UnknownHostException;
  */
 public class Client {
 
-    
     private static Socket socket;
+
     public static void main(String[] args) throws UnknownHostException, IOException {
-       try
-        {
+
+        //Caso fosse utilizado as primitivas do protocolo request-reply esse seria o comportamento do metodo doOperation
+        try {
             InetAddress inetAddress = InetAddress.getByName("localhost");
             socket = new Socket(inetAddress, 10999);
             OutputStream out = socket.getOutputStream();
             OutputStreamWriter outWrite = new OutputStreamWriter(out);
             BufferedWriter buffwrite = new BufferedWriter(outWrite);
- 
-            String mensagem = "IFPB";
- 
+            //enviando requisição
+            String mensagem = "letra maiuscula";
             String mensagemEnviada = mensagem + "\n";
             buffwrite.write(mensagemEnviada);
             buffwrite.flush();
             //recebendo resposta do servidor
             InputStream input = socket.getInputStream();
-            InputStreamReader isr = new InputStreamReader(input);
-            BufferedReader buff = new BufferedReader(isr);
+            InputStreamReader reader = new InputStreamReader(input);
+            BufferedReader buff = new BufferedReader(reader);
             String resposta = buff.readLine();
-            System.out.println("A palavra tem "+resposta);
-        }
-        catch (Exception exception)
-        {
+            System.out.println(resposta);
+        } catch (Exception exception) {
             exception.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
+        } finally {
+            try {
                 socket.close();
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-        }
-       
-          
-              
-            
-
-    
-    
-
+}

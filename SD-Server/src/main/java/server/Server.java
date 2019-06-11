@@ -1,4 +1,3 @@
-
 package server;
 
 import java.io.BufferedReader;
@@ -17,59 +16,50 @@ import java.net.Socket;
  */
 public class Server {
 
-   private static Socket socket;
-   
+    private static Socket socket;
+
     public static void main(String[] args) throws IOException {
-       
-        try
-        {
- 
+
+        try {
+
             ServerSocket serverSocket = new ServerSocket(10999);
             System.out.println("Servidor inicializado");
- 
-           
-            while(true)
-            {
-                
+
+            while (true) {
+                //recuperação de requisicao
                 socket = serverSocket.accept();
+                // recuperando mensagem do cliente
+                //Se fosse utilizado as primitivas do protocolo request-reply esse seria o comportamento do metodo getRequest
                 InputStream input = socket.getInputStream();
-                InputStreamReader isr = new InputStreamReader(input);
-                BufferedReader buff = new BufferedReader(isr);
+                InputStreamReader reader = new InputStreamReader(input);
+                BufferedReader buff = new BufferedReader(reader);
                 String palavra = buff.readLine();
-               //mensagem recebida
-               String resposta;
-                try
-                {
-                    int letras = palavra.length();
-                    resposta =  Integer.toString(letras) +" letras \n";
-                }
-                catch(Exception e)
-                {
-                    //mensagem retornada
+                //mensagem recebida
+                String resposta;
+                try {
+                    // transformando a mensagem enviada pelo cliente em maiuscula
+                    String maiuscula = palavra.toUpperCase();
+                    resposta = maiuscula + "\n";
+                } catch (Exception e) {
+                    //retornando mensagem
+                    //  Se fosse utilizado as primitivas do protocolo request-reply esse seria o comportamento do metodo sendReply
                     resposta = "Envie novamente";
                 }
                 OutputStream out = socket.getOutputStream();
                 OutputStreamWriter outWrite = new OutputStreamWriter(out);
                 BufferedWriter buffwrite = new BufferedWriter(outWrite);
                 buffwrite.write(resposta);
-               
+
                 buffwrite.flush();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
+        } finally {
+            try {
                 socket.close();
+            } catch (Exception e) {
             }
-            catch(Exception e){}
         }
     }
-            
-    }
-   
 
+}
